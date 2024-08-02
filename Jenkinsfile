@@ -32,7 +32,9 @@ pipeline {
         }
         stage("Run Tests") {
             //run tests
-            bat 'dotnet test SeleniumIde.sln --logger "trx;LogFileName=TestResults.trx"' // след като се изпълнят тестовете, логъра ще запише резултатите в ProgramData/Jenkins/jenkins/workspace
+            steps {
+                bat 'dotnet test SeleniumIde.sln --logger "trx;LogFileName=TestResults.trx"' // след като се изпълнят тестовете, логъра ще запише резултатите в ProgramData/Jenkins/jenkins/workspace
+            }
         }
     }
 
