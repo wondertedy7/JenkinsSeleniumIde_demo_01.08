@@ -10,15 +10,37 @@ pipeline {
         }
         stage("Setup .Net Core") {
             //install dotnet
+            bat '''
+            echo installing .NET SDK 6.0
+            choco install dotnet -sdk -y --version-6.0.100
+            '''
+
         }
-        stage("Restore dependencies") {
-            //install dependencies
+        stage("Restore nuget packages") {
+            steps {
+                bat 'dotnet restore SeleniumIde.sln'
+            }
+
         }
         stage("Build") {
             //build
+            steps {
+                bat 'dotnet build SeleniumIde.sln --configuration release'
+            }
         }
         stage("Run Tests") {
             //run tests
+            bat 'dotnet test SeleniumIde.sln --logger "trx;LogFileName=TestResults.trx"' // след като се изпълнят тестовете, логъра ще запише резултатите в ProgramData/Jenkins/jenkins/workspace
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/TestResults/*.trx', allowEmptyArchive: true
+            step({
+                $class: 'MSTestPublisher',
+                testResultsFile: '**/TestResults/*.trx',
+            })
         }
     }
 }
