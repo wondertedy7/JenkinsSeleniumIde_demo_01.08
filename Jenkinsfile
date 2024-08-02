@@ -12,9 +12,9 @@ pipeline {
             //install dotnet
             steps {
                 bat '''
-                    echo Installing .NET SDK 6.0
-                    choco install dotnet -sdk -y --version-6.0.132
-                    '''   
+                echo Installing .NET SDK 6.0
+                choco install dotnet -sdk -y --version-6.0.132
+                '''   
             }
 
         }
